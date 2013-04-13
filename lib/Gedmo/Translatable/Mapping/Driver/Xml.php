@@ -40,6 +40,8 @@ class Xml extends BaseXml
                     $config['locale'] = $this->_getAttribute($data, 'locale');
                 } elseif ($this->_isAttributeSet($data, 'language')) {
                     $config['locale'] = $this->_getAttribute($data, 'language');
+                } elseif ($this->_isAttributeSet($data, 'inject_original_locale')) {
+                    $config['inject_original_locale'] = $this->_getAttribute($data, 'inject_original_locale');
                 }
                 if ($this->_isAttributeSet($data, 'entity')) {
                     $entity = $this->_getAttribute($data, 'entity');

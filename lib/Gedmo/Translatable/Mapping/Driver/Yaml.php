@@ -44,6 +44,8 @@ class Yaml extends File implements Driver
                 $config['locale'] = $classMapping['translation']['locale'];
             } elseif (isset($classMapping['translation']['language'])) {
                 $config['locale'] = $classMapping['translation']['language'];
+            } elseif (isset($classMapping['translation']['inject_original_locale'])) {
+                $config['inject_original_locale'] = $classMapping['translation']['inject_original_locale'];
             }
         }
         if (isset($mapping['fields'])) {

@@ -45,6 +45,13 @@ class Article implements Translatable
     private $locale;
 
     /**
+     * Store the original locale the object was created with
+     * @ORM\Column(name="original_locale", type="string", length=7)
+     * @Gedmo\InjectOriginalLocale
+     */
+    private $originalLocale;
+
+    /**
      * @ORM\OneToMany(targetEntity="Comment", mappedBy="article")
      */
     private $comments;
@@ -88,6 +95,16 @@ class Article implements Translatable
     public function setTranslatableLocale($locale)
     {
         $this->locale = $locale;
+    }
+
+    public function setOriginalLocale($originalLocale)
+    {
+        $this->originalLocale = $originalLocale;
+    }
+
+    public function getOriginalLocale()
+    {
+        return $this->originalLocale;
     }
 
     public function setViews ($views)

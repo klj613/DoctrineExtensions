@@ -122,6 +122,7 @@ class TranslatableListener extends MappedEventSubscriber
     {
         return array(
             'postLoad',
+            'prePersist',
             'postPersist',
             'preFlush',
             'onFlush',
@@ -382,6 +383,41 @@ class TranslatableListener extends MappedEventSubscriber
                 $wrapped = AbstractWrapper::wrap($object, $om);
                 $transClass = $this->getTranslationClass($ea, $meta->name);
                 $ea->removeAssociatedTranslations($wrapped, $transClass, $config['useObjectClass']);
+            }
+        }
+    }
+
+    /**
+     * Injects original locale into a new entity
+     *
+     * @param EventArgs $args
+     * @return void
+     */
+    public function prePersist(EventArgs $args)
+    {
+        $ea = $this->getEventAdapter($args);
+        $om = $ea->getObjectManager();
+        $object = $ea->getObject();
+        $meta = $om->getClassMetadata(get_class($object));
+        $config = $this->getConfiguration($om, $meta->name);
+
+        if (isset($config['inject_original_locale'])) {
+            $locale = $this->getTranslatableLocale($object, $meta);
+
+            $class = $meta->getReflectionClass();
+            $reflectionProperty = $class->getProperty(
+                self::$configurations[$this->name][$meta->name]['inject_original_locale']
+            );
+
+            if (!$reflectionProperty) {
+                $column = self::$configurations[$this->name][$meta->name]['inject_original_locale'];
+                throw new \Gedmo\Exception\RuntimeException("There is no original locale property ({$column}) found on object: {$meta->name}");
+            }
+
+            $reflectionProperty->setAccessible(true);
+
+            if (!$reflectionProperty->getValue($object)) {
+                $reflectionProperty->setValue($object, $locale);
             }
         }
     }

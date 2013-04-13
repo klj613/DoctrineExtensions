@@ -433,7 +433,7 @@ class TranslationQueryWalkerTest extends BaseTestCaseORM
         $result = $q->getArrayResult();
         $this->assertCount(1, $result);
         $food = $result[0];
-        $this->assertCount(6, $food);
+        $this->assertCount(7, $food);
         $this->assertEquals('Food', $food['title']);
         $this->assertEquals('about food', $food['content']);
         $comments = $food['comments'];
@@ -451,7 +451,7 @@ class TranslationQueryWalkerTest extends BaseTestCaseORM
         $result = $q->getArrayResult();
         $this->assertCount(1, $result);
         $food = $result[0];
-        $this->assertCount(6, $food);
+        $this->assertCount(7, $food);
         $this->assertEquals('Maistas', $food['title']);
         $this->assertEquals('apie maista', $food['content']);
         $comments = $food['comments'];
@@ -558,14 +558,14 @@ class TranslationQueryWalkerTest extends BaseTestCaseORM
         $result = $q->getArrayResult();
         $this->assertCount(1, $result);
         $food = $result[0];
-        $this->assertCount(5, $food);
+        $this->assertCount(6, $food);
         $this->assertEquals('Food', $food['title']);
         $this->assertEquals('about food', $food['content']);
         $this->translatableListener->setTranslatableLocale('lt_lt');
         $result = $q->getArrayResult();
         $this->assertCount(1, $result);
         $food = $result[0];
-        $this->assertCount(5, $food);
+        $this->assertCount(6, $food);
         $this->assertEquals('Maistas', $food['title']);
         $this->assertEquals('apie maista', $food['content']);
 

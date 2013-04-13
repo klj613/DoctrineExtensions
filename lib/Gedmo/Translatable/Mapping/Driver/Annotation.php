@@ -40,6 +40,11 @@ class Annotation extends AbstractAnnotationDriver
     const LANGUAGE = 'Gedmo\\Mapping\\Annotation\\Language';
 
     /**
+     * Annotation to identify field which can store the original locale
+     */
+    const INJECT_ORIGINAL_LOCALE = 'Gedmo\\Mapping\\Annotation\\InjectOriginalLocale';
+
+    /**
      * {@inheritDoc}
      */
     public function readExtendedMetadata($meta, array &$config)
@@ -86,6 +91,12 @@ class Annotation extends AbstractAnnotationDriver
                     throw new InvalidMappingException("Language field [{$field}] should not be mapped as column property in entity - {$meta->name}, since it makes no sence");
                 }
                 $config['locale'] = $field;
+            } elseif ($injectOriginalLocale = $this->reader->getPropertyAnnotation($property, self::INJECT_ORIGINAL_LOCALE)) {
+                $field = $property->getName();
+                if (!$meta->hasField($field)) {
+                    throw new InvalidMappingException("Inject original locale field [{$field}] should be mapped in entity - {$meta->name}, since it makes no sense");
+                }
+                $config['inject_original_locale'] = $field;
             }
         }
 

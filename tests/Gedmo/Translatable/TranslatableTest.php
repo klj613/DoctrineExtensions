@@ -44,6 +44,84 @@ class TranslatableTest extends BaseTestCaseORM
     /**
      * @test
      */
+    function shouldInjectOriginalLocale()
+    {
+        $article = new Article();
+        $article->setTitle('title in en');
+        $article->setContent('content in en');
+
+        $this->em->persist($article);
+        $this->em->flush();
+
+        $this->assertEquals('en_us', $article->getOriginalLocale());
+
+        return $article;
+    }
+
+    /**
+     * @test
+     */
+    function shouldInjectOriginalLocaleFromTranslatableLocaleInObject()
+    {
+        $article = new Article();
+        $article->setTitle('title in en');
+        $article->setContent('content in en');
+        $article->setTranslatableLocale('en_gb');
+
+        $this->em->persist($article);
+        $this->em->flush();
+
+        $this->assertEquals('en_gb', $article->getOriginalLocale());
+    }
+
+    /**
+     * @test
+     * @depends shouldInjectOriginalLocale 
+     */
+    function shouldNotUpdateOriginalLocaleOnChanges(Article $article)
+    {
+        $article->setContent('new content');
+        $article->setTranslatableLocale('en_gb');
+
+        $this->em->flush();
+        $this->assertEquals('en_us', $article->getOriginalLocale());
+    }
+
+    /**
+     * @test
+     * @depends shouldInjectOriginalLocale
+     */
+    function shouldBeAbleToUpdateOriginalLocaleManually(Article $article)
+    {
+        $article->setContent('new content');
+        $article->setOriginalLocale('en_gb');
+
+        $this->em->flush();
+        $this->assertEquals('en_gb', $article->getOriginalLocale());
+    }
+
+    /**
+     * @test
+     */
+    function shouldBeAbleToSetOriginalLocaleManually()
+    {
+        $article = new Article();
+        $article->setTitle('title in en');
+        $article->setContent('content in en');
+        $article->setTranslatableLocale('en_us');
+        $article->setOriginalLocale('en_gb');
+
+        $this->em->persist($article);
+        $this->em->flush();
+
+        $this->assertEquals('en_gb', $article->getOriginalLocale());
+
+        return $article;
+    }
+
+    /**
+     * @test
+     */
     function shouldPersistDefaultLocaleTranslationIfRequired()
     {
         $this->translatableListener->setPersistDefaultLocaleTranslation(true);
